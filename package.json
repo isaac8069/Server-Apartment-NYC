@@ -13,11 +13,22 @@
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
-    "express": "^4.17.1",
+    "express": "^4.17.2",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^4.2.1",
-    "mongoose": "^6.1.1",
+    "mongodb": "^4.3.0",
+    "mongoose": "^6.1.5",
     "passport": "^0.5.0",
     "passport-http-bearer": "^1.0.1"
-  }
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isaac8069/Server-Apartment-NYC.git"
+  },
+  "bugs": {
+    "url": "https://github.com/isaac8069/Server-Apartment-NYC/issues"
+  },
+  "homepage": "https://github.com/isaac8069/Server-Apartment-NYC#readme"
 }

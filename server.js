@@ -6,6 +6,7 @@ const cors = require('cors')
 // require route files
 const exampleRoutes = require('./app/routes/example_routes')
 const userRoutes = require('./app/routes/user_routes')
+const apartmentRoutes = require('./app/routes/apartment_routes')
 
 // require middleware
 const errorHandler = require('./lib/error_handler')
@@ -30,6 +31,10 @@ const clientDevPort = 3000
 mongoose.connect(db, {
 	useNewUrlParser: true,
 })
+
+// mongoose.connection.once('open', ()=> {
+// 	console.log(`Connected to Mongo at ${mongoose.connection.host}:${mongoose.connection.port}`)
+// })
 
 // instantiate express application object
 const app = express()
@@ -67,6 +72,7 @@ app.use(requestLogger)
 // register route files
 app.use(exampleRoutes)
 app.use(userRoutes)
+app.use(apartmentRoutes)
 
 // register error handling middleware
 // note that this comes after the route middlewares, because it needs to be

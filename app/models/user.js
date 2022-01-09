@@ -11,6 +11,17 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		messages: {
+			type: [mongoose.Schema.Types.ObjectId],
+			ref: 'Message',
+		},
+		apartments: {
+			type: [mongoose.Schema.Types.ObjectId],
+			ref: 'Apartment',
+		},
+		owner: {
+			type: Boolean,
+		},
 		token: String,
 	},
 	{
