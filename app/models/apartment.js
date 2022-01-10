@@ -20,13 +20,13 @@ const apartmentSchema = new mongoose.Schema(
         },
         address: {
             type: Object,
-            required: ['city', 'zipcode'],
+            required: ['borough', 'zipcode'],
             properties: {
-                street: {
+                neighborhood: {
                     type: String,
                     description: 'must be a string if the field exists'
                 },
-                city: {
+                borough: {
                     type: String,
                     description: "must be a string and is required"
                 },

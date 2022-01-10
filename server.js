@@ -3,10 +3,15 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 
+// cloudinary
+const cloudinary = require('cloudinary')
+
 // require route files
 const exampleRoutes = require('./app/routes/example_routes')
 const userRoutes = require('./app/routes/user_routes')
 const apartmentRoutes = require('./app/routes/apartment_routes')
+const tagRoutes = require('./app/routes/tag_routes')
+// const messageRoutes = require('./app/routes/message_routes')
 
 // require middleware
 const errorHandler = require('./lib/error_handler')
@@ -51,6 +56,23 @@ app.use(
 // adding PORT= to your env file will be necessary for deployment
 const port = process.env.PORT || serverDevPort
 
+// middleware for Socket.io
+// app.use(bodyParser.urlencoded({ extended: true }))
+// app.use(bodyParser.json())
+
+// const http = require('http').Server(app)
+// const io = require('socket.io')(http)
+// io.on('connection', function(socket){
+//   console.log('a user connected');
+//   socket.on('disconnect', function(){
+//     console.log('User Disconnected')
+//   })
+//   socket.on('example_message', function(msg){
+//     console.log('message: ' + msg);
+//   })
+// })
+
+
 // this middleware makes it so the client can use the Rails convention
 // of `Authorization: Token token=<token>` OR the Express convention of
 // `Authorization: Bearer <token>`
@@ -73,6 +95,8 @@ app.use(requestLogger)
 app.use(exampleRoutes)
 app.use(userRoutes)
 app.use(apartmentRoutes)
+app.use(tagRoutes)
+// app.use(messageRoutes)
 
 // register error handling middleware
 // note that this comes after the route middlewares, because it needs to be
