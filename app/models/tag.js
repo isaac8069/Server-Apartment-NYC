@@ -10,11 +10,6 @@ const tagSchema = new mongoose.Schema(
         apartments: {
             type: [mongoose.Schema.Types.ObjectId],
             ref: 'Apartment'
-        },
-        owner: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
         }
 	}
 )

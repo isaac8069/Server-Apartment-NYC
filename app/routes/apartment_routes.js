@@ -10,6 +10,9 @@ const requireOwnership = customErrors.requireOwnership
 
 const removeBlanks = require('../../lib/remove_blank_fields')
 const apartment = require('../models/apartment')
+const cloudinary = require('cloudinary')
+const multer = require('multer')
+const upload = multer({ dest: './uploads/' })
 
 const requireToken = passport.authenticate('bearer', { session: false })
 
@@ -17,7 +20,7 @@ const router = express.Router()
 
 // INDEX
 // GET /apartments
-router.get('/apartments', requireToken, (req, res, next) => {
+router.get('/apartments', (req, res, next) => {
     Apartment.find()
     .then((apartments) => {
         return apartments.map((apartment) => apartment.toObject())
@@ -39,15 +42,55 @@ router.get('/apartments/:id', requireToken, (req, res, next) => {
 // CREATE
 // POST /apartments
 
-router.post('/apartments', requireToken, (req, res, next) => {
+router.post('/apartments',  requireToken, (req, res, next) => {
+    console.log('USERid', req.user.id)
     req.body.apartment.owner = req.user.id
-
+    console.log('APARTMENTowner', req.body.apartment.owner)
     Apartment.create(req.body.apartment)
     .then((apartment) => { 
         res.status(201).json({ apartment: apartment.toObject()})
     })
     .catch(next)
 })
+
+////////////// CODE FROM P2 to reference //////////////
+// POST - CLOUDINARY  UPLOAD
+router.post('/image', upload.single('myFile'), function (req, res) {
+    cloudinary.uploader.upload(req.file.path, function (result) {
+      // console.log('image page works')
+      // console.log(result)
+      // console.log('This should be the image', result.url)
+    })
+      .then(image => {
+        const apartment = req.body
+        // console.log('This should be the apartment body', apartment)
+        // console.log('This should be apartment and image', image)
+        res.render('apartments/update', { apartment: apartment, image: image.url })
+      })
+  })
+  
+  // PUT - CONFIRM FINAL IMAGE
+  router.put('/:id/update', (req, res) => {
+    console.log('Should be whole apartment', req.body)
+    db.apartment.update({
+      title: req.body.title,
+      rent: req.body.rent,
+      description: req.body.description,
+      location: req.body.location,
+      bedrooms: req.body.bedrooms,
+      bathrooms: req.body.bathrooms,
+      amenities: req.body.amenities,
+      roommates: req.body.roommates,
+      image: req.body.image
+    }, { where: { id: req.params.id } })
+      .then(updatedApartment => {
+        console.log(`new apartment UPDATED: ${updatedApartment}`)
+        res.redirect(`/apartment/${req.params.id}`)
+      })
+      .catch(error => console.error)
+  })
+////////////////////////////////////////////////////////////
+
 
 // UPDATE
 // PATCH /apartments/5a7db6c74d55bc51bdf39793
@@ -74,6 +117,29 @@ router.delete('/apartments/:id', requireToken, (req, res, next) => {
         apartment.deleteOne()
     })
     .then(() => res.sendStatus(204))
+    .catch(next)
+})
+
+// SEARCH FOR AN APARTMENT USING LOCATION
+// router.get('/', (req, res, next) => {
+//     console.log('SEARCH ROUTE')
+//     console.log(req.query.apartment.address.zipcode)
+//     Apartment.findAll(req.params.apartment.address.zipcode)
+//     .then(handle404)
+//     .then((apartments) => {
+//         return apartments.map((apartment) => apartment.toObject())
+//     })
+//     .then((apartments) => res.status(200).json({ apartments: apartments }))
+//     .catch(next)
+// })
+
+router.get('/', (req, res, next) => {
+    // console.log(req.params.address.zipcode)
+    Apartment.findAll(req.query)
+    .then((apartments) => {
+        return apartments.map((apartment) => apartment.toObject())
+    })
+    .then((apartments) => res.status(200).json({ apartments: apartments }))
     .catch(next)
 })
 

@@ -5,6 +5,8 @@ const cors = require('cors')
 
 // cloudinary
 const cloudinary = require('cloudinary')
+const multer = require('multer')
+const upload = multer({ dest: './uploads/' })
 
 // require route files
 const exampleRoutes = require('./app/routes/example_routes')
