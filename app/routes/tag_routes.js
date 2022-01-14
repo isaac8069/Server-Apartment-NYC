@@ -59,42 +59,15 @@ router.post('/tags', requireToken, (req, res, next) => {
 })
 
 // UPDATE
-// POST /add-tag/apartmentId
-// apartments/:tagId could find an apartment and add a tag without a form or apartmets/:aptId/:tagId aprtment.find(reqId)  apartment.tag.push(tagId)
-router.patch('/apartments/:id', (req, res, next) => {
-    const apartmentTag = (req.body.tag)
-    // req.body.tag.owner = (req.params.id)
-    console.log('AptTAG FOUND', apartmentTag)
-    apartment.findById(req.params.id)
-    .exec()
-        .then(handle404)
-        .then(apartment => {
-            const tag = new Tag({
-                apartmentTag
-                
-            })
-            tag.save()
-            .then(tag => {
-                // requireOwnership(req, tag)
-                console.log('THIS IS THE TAG', tag)
-                    apartment.tags.push(tag)
-                    apartment.save()
-                        .then((apartment) => res.status(200).json(apartment))
-                        .catch(err => res.status(400).json('Error on tag save: ' + err))
-                })
-        })
-        .catch(next)
-})
-
-// UPDATE
-// PATCH /tags/5a7db6c74d55bc51bdf39793
+// PATCH /tags/tagId
 router.patch('/tags/:id', requireToken, removeBlanks, (req, res, next) => {
+    console.log('ID ME', req.params.id)
     delete req.body.tag.owner
 
     Tag.findById(req.params.id)
         .then(handle404)
         .then((tag) => {
-            requireOwnership(req, tag)
+            // requireOwnership(req, tag)
             return tag.updateOne(req.body.tag)
         })
         .then(() => res.sendStatus(204))
@@ -102,7 +75,7 @@ router.patch('/tags/:id', requireToken, removeBlanks, (req, res, next) => {
 })
 
 // DESTROY
-// DELETE /tags/5a7db6c74d55bc51bdf39793
+// DELETE /tags/tagId
 router.delete('/tags/:id', requireToken, (req, res, next) => {
     Tag.findById(req.params.id)
         .then(handle404)

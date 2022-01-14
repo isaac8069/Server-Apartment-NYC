@@ -16,6 +16,7 @@ const tagRoutes = require('./app/routes/tag_routes')
 // const messageRoutes = require('./app/routes/message_routes')
 
 // require middleware
+const bodyParser = require('body-parser')
 const errorHandler = require('./lib/error_handler')
 const replaceToken = require('./lib/replace_token')
 const requestLogger = require('./lib/request_logger')
@@ -58,9 +59,9 @@ app.use(
 // adding PORT= to your env file will be necessary for deployment
 const port = process.env.PORT || serverDevPort
 
-// middleware for Socket.io
-// app.use(bodyParser.urlencoded({ extended: true }))
-// app.use(bodyParser.json())
+// middleware
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
 
 // const http = require('http').Server(app)
 // const io = require('socket.io')(http)
