@@ -80,7 +80,6 @@ router.delete('/tags/:id', requireToken, (req, res, next) => {
     Tag.findById(req.params.id)
         .then(handle404)
         .then((tag) => {
-            requireOwnership(req, tag)
             tag.deleteOne()
         })
         .then(() => res.sendStatus(204))
