@@ -36,13 +36,26 @@ router.get('/apartments', (req, res, next) => {
 // SHOW
 // GET/ apartments/5a7db6c74d55bc51bdf39793
 
-router.get('/apartments/:id', requireToken, (req, res, next) => {
+router.get('/apartments/:id', (req, res, next) => {
   Apartment.findById(req.params.id)
     .then(handle404)
     .then((apartment) => res.status(200).json({ apartment: apartment.toObject() }))
     .catch(next)
 })
 
+// SEARCH FOR AN APARTMENT USING LOCATION (CHANGE TO STRING AT LATER DATE/DROP DATABASE)
+router.get('/apartments/search/:zipcode', (req, res, next) => {
+  console.log('SEARCH ROUTE')
+  console.log('APARTMENT by ZIPCODE:', req.params.zipcode)
+  Apartment.find({zipcode: req.params.zipcode})
+  .then(handle404)
+  .then((apartments) => {
+    console.log('APARTMENTS???', apartments)
+      return apartments.map((apartment) => apartment.toObject())
+  })
+  .then((apartments) => res.status(200).json({ apartments: apartments }))
+  .catch(next)
+})
 
 // SHOW All User Apartments
 // GET apartments/userId
@@ -56,13 +69,6 @@ router.get('/apartments/user/:id', requireToken, (req, res, next) => {
         .then((apartments) => res.status(200).json({ apartments: apartments }))
         .catch(next)
     })
-// })
-
-// router.get('/apartments/user/:id', (req, res, next) => {
-//   console.log('THIS IS THE OWNER:', owner)
-//   User.findById(owner)
-//     .then(foundUser)
-// })
 
 
 // CREATE
@@ -131,20 +137,18 @@ router.delete('/apartments/:id', requireToken, (req, res, next) => {
     .catch(next)
 })
 
-// SEARCH FOR AN APARTMENT USING LOCATION
-// router.get('/', (req, res, next) => {
-//     console.log('SEARCH ROUTE')
-//     console.log(req.query.apartment.address.zipcode)
-//     Apartment.findAll(req.params.apartment.address.zipcode)
-//     .then(handle404)
-//     .then((apartments) => {
-//         return apartments.map((apartment) => apartment.toObject())
+
+
+// router.get('/apartments/user/:id', requireToken, (req, res, next) => {
+//   console.log('USER:', req.user.id)
+//       Apartment.find()
+//         .then((apartments) => {
+//           const userApts = apartments.filter(apt => apt.owner == req.user.id)
+//           return userApts.map((apartment) => apartment.toObject())
+//         })
+//         .then((apartments) => res.status(200).json({ apartments: apartments }))
+//         .catch(next)
 //     })
-//     .then((apartments) => res.status(200).json({ apartments: apartments }))
-//     .catch(next)
-// })
-
-
 
 ////////////// CODE FROM P2 to reference //////////////
 // POST - CLOUDINARY  UPLOAD
