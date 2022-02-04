@@ -35,7 +35,6 @@ router.get('/apartments', (req, res, next) => {
 
 // SHOW
 // GET/ apartments/5a7db6c74d55bc51bdf39793
-
 router.get('/apartments/:id', (req, res, next) => {
   Apartment.findById(req.params.id)
     .then(handle404)
@@ -43,7 +42,8 @@ router.get('/apartments/:id', (req, res, next) => {
     .catch(next)
 })
 
-// SEARCH FOR AN APARTMENT USING LOCATION (CHANGE TO STRING AT LATER DATE/DROP DATABASE)
+// SEARCH FOR AN APARTMENT USING ZIPCODE (CHANGE TO STRING AT LATER DATE/DROP DATABASE)
+// GET /apartments/search/10002
 router.get('/apartments/search/:zipcode', (req, res, next) => {
   console.log('SEARCH ROUTE')
   console.log('APARTMENT by ZIPCODE:', req.params.zipcode)
@@ -57,7 +57,7 @@ router.get('/apartments/search/:zipcode', (req, res, next) => {
   .catch(next)
 })
 
-// SHOW All User Apartments
+// SHOW All USER APARTMENTS
 // GET apartments/userId
 router.get('/apartments/user/:id', requireToken, (req, res, next) => {
   console.log('USER:', req.user.id)
@@ -70,10 +70,8 @@ router.get('/apartments/user/:id', requireToken, (req, res, next) => {
         .catch(next)
     })
 
-
-// CREATE
+// CREATE AN APARTMENT
 // POST /apartments
-
 router.post('/apartments', requireToken, (req, res, next) => {
   console.log('USERid', req.user.id)
   req.body.apartment.owner = req.user.id
@@ -85,6 +83,8 @@ router.post('/apartments', requireToken, (req, res, next) => {
     .catch(next)
 })
 
+// ASSOCIATE AN APARTMENT TO A TAG
+// POST /tags
 // Find apartment and push a tag in the tag array within apartment
 router.post('/tags/:apartmentId', (req, res, next) => {
   console.log('REEQBODY', req.params)
@@ -109,7 +109,8 @@ router.post('/tags/:apartmentId', (req, res, next) => {
     })
     .catch(next)
 })
-// UPDATE
+
+// UPDATE APARTMENT
 // PATCH /apartments/5a7db6c74d55bc51bdf39793
 router.patch('/apartments/:id', requireToken, removeBlanks, (req, res, next) => {
   delete req.body.apartment.owner
@@ -124,7 +125,7 @@ router.patch('/apartments/:id', requireToken, removeBlanks, (req, res, next) => 
     .catch(next)
 })
 
-// DESTROY
+// DESTROY AN APARTMENT
 // DELETE /apartments/5a7db6c74d55bc51bdf39793
 router.delete('/apartments/:id', requireToken, (req, res, next) => {
   Apartment.findById(req.params.id)
@@ -136,19 +137,6 @@ router.delete('/apartments/:id', requireToken, (req, res, next) => {
     .then(() => res.sendStatus(204))
     .catch(next)
 })
-
-
-
-// router.get('/apartments/user/:id', requireToken, (req, res, next) => {
-//   console.log('USER:', req.user.id)
-//       Apartment.find()
-//         .then((apartments) => {
-//           const userApts = apartments.filter(apt => apt.owner == req.user.id)
-//           return userApts.map((apartment) => apartment.toObject())
-//         })
-//         .then((apartments) => res.status(200).json({ apartments: apartments }))
-//         .catch(next)
-//     })
 
 ////////////// CODE FROM P2 to reference //////////////
 // POST - CLOUDINARY  UPLOAD
