@@ -25,7 +25,7 @@ const apartmentSchema = new mongoose.Schema(
             type: String,
         },
         zipcode: {
-            type: Number,
+            type: String,
         },
         bedrooms: {
             type: Number,
